@@ -1,0 +1,70 @@
+<html>
+<head>
+<!-- Next lines are an attempt to prevent caching of the xml file 
+These do not infact solve the problem in Firefox see 
+function displayResult for solution to this below -->
+<meta http-equiv="pragma" content="no-cache"/>
+<meta http-equiv="expires" content="0"/>
+<meta http-equiv="cache-control" content="no-cache"/>
+<script>
+function loadXMLDoc(fname)
+{
+  var xmlDoc;
+  // code for IE
+  if (window.ActiveXObject)
+  {
+    xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+  }
+  // code for Mozilla, Firefox, Opera, etc.
+  else if (document.implementation
+  && document.implementation.createDocument)
+  {
+    xmlDoc=document.implementation.createDocument("","",null);
+   }
+  else
+  {
+    alert('Your browser cannot handle this script');
+  }
+xmlDoc.async=false;
+xmlDoc.load(fname);
+return(xmlDoc);
+}
+
+function displayResult()
+{
+// The only way to prevent Firefox from caching the XML file is to use a unique callback
+// This is achived here by using the date
+// This appears to stop Firefox from caching
+// Type about:cache in Frefox to see this
+xml=loadXMLDoc("heatmiser_status.xml?uid="+new Date().getTime());
+xsl=loadXMLDoc("heating_times_xsl.xslt");
+// code for IE
+if (window.ActiveXObject)
+  {
+    ex=xml.transformNode(xsl);
+    document.getElementById("example").innerHTML=ex;
+  }
+  // code for Mozilla, Firefox, Opera, etc.
+else if (document.implementation
+  && document.implementation.createDocument)
+  {
+    xsltProcessor=new XSLTProcessor();
+    xsltProcessor.importStylesheet(xsl);
+    resultDocument = xsltProcessor.transformToFragment(xml,document);
+    document.getElementById("example").appendChild(resultDocument);
+  }
+}
+</script>
+<title>Heating Times</title>
+<link rel="stylesheet" href="heating_status.css"></link>
+</head>
+<body id="example" onLoad="displayResult()">
+Some text
+<h2>More text</h2>
+<a href="heating_status.htm">Status</a> :
+<a href="heating_config.htm">Config</a> :
+<a href="heating_times.htm">Times</a> :
+<a href="mytimeline.htm">Timeline</a>
+<br>
+</body>
+</html>

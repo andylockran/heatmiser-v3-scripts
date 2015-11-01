@@ -1,0 +1,7 @@
+/* Style sheet for Heatmiser Web pages */
+th {font-weight:bold;
+background-color:darkgrey}
+tr.a {background: #efefef}
+tr.b {background: #fff}
+tr.ad {background: #efafef}
+tr.bd {background: #faf}

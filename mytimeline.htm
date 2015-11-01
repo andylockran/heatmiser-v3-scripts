@@ -1,0 +1,79 @@
+ <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+ <html>
+   <head>
+     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+     <title>Heating Timeline</title>
+
+     <script src="http://static.simile.mit.edu/timeline/api-2.3.0/timeline-api.js?bundle=true" type="text/javascript"></script>
+
+    <script>
+         var today=new Date();
+         <!-- date: used to be of format date:           "Apr 03 2011 00:00:00 GMT", -->
+         var tl;
+         function onLoad() {
+           var eventSource = new Timeline.DefaultEventSource();
+           var bandInfos = [
+             Timeline.createBandInfo({
+                 eventSource:    eventSource,
+                 date:           today,
+                 width:          "70%", 
+                 intervalUnit:   Timeline.DateTime.HOUR, 
+                 intervalPixels: 50
+             }),
+             Timeline.createBandInfo({
+                 overview:       true,
+                 eventSource:    eventSource,
+                 date:           today,
+                 width:          "15%", 
+                 intervalUnit:   Timeline.DateTime.DAY, 
+                 intervalPixels: 200
+             }),
+             Timeline.createBandInfo({
+                 overview:       true,
+                 eventSource:    eventSource,
+                 date:           today,
+                 width:          "15%", 
+                 intervalUnit:   Timeline.DateTime.DAY, 
+                 intervalPixels: 50
+             })
+           ];
+           bandInfos[1].syncWith = 0;
+           bandInfos[1].highlight = true;
+		   bandInfos[2].syncWith = 0;
+		   bandInfos[2].highlight = true;
+
+           
+           tl = Timeline.create(document.getElementById("my-timeline"), bandInfos);
+           Timeline.loadXML("heattimeline.xml", function(xml, url) { eventSource.loadXML(xml, url); });
+         }
+         var resizeTimerID = null;
+         function onResize() {
+             if (resizeTimerID == null) {
+                 resizeTimerID = window.setTimeout(function() {
+                     resizeTimerID = null;
+                     tl.layout();
+                 }, 500);
+             }
+         }
+    </script>
+   </head>
+    <body onload="onLoad();" onresize="onResize();">
+    <div id="my-timeline" style="height: 600px; border: 1px solid #aaa"></div>
+    <noscript>
+    This page uses Javascript to show you a Timeline. Please enable Javascript in your browser to see the full page. Thank you.
+    </noscript>
+Jump To :
+    <a href="javascript:tl.getBand(0).setCenterVisibleDate(new Date());">Now</a> :
+    <a href="javascript:tl.getBand(0).setCenterVisibleDate((new Date).setDate((new Date()).getDate()-1));">-24Hr</a> :
+    <a href="javascript:tl.getBand(0).setCenterVisibleDate((new Date).setDate((new Date()).getDate()-7));">-1Wk</a> :
+    {Not working
+    <a href="javascript:tl.getBand(0).setCenterVisibleDate(new Date());">Today</a> :
+    <a href="javascript:tl.getBand(0).setCenterVisibleDate(new Date(new Date()-2));">Yesterday</a> :
+    <a href="javascript:tl.getBand(0).setCenterVisibleDate(new Date(2011, 4, 8)-2);">Last Week</a> }
+
+   
+    <p>Timeline version <span id='tl_ver'></span>.</p>
+      <script>Timeline.writeVersion('tl_ver')</script>
+
+   </body>
+ </html>
